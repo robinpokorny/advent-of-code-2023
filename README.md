@@ -1,25 +1,36 @@
-# advent-of-code-2023
+# Advent of Code 2023 🎄
 
-Welcome to the Advent of Code[^aoc] Kotlin project created by [robinpokorny][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
+![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white)
+![GitHub last commit](https://img.shields.io/github/last-commit/robinpokorny/advent-of-code-2023?style=for-the-badge)
 
-In this repository, robinpokorny is about to provide solutions for the puzzles using [Kotlin][kotlin] language.
+> _Advent of Code 2023 solutions by **Robin Pokorny**:
+[Home page](https://robinpokorny.com/)
+|
+[Twitter](https://twitter.com/robinpokorny)
+|
+[YouTube](https://www.youtube.com/c/robinpokorny)_
 
-If you're stuck with Kotlin-specific questions or anything related to this template, check out the following resources:
+### Organisation
+For each puzzle, there is a file `src/DayXX.kt`, where `XX` is a zero-leading number of the puzzle.
 
-- [Kotlin docs][docs]
-- [Kotlin Slack][slack]
-- Template [issue tracker][issues]
+As each puzzle has two levels, inside the puzzle's file, there are two functions, `part1` and `part2`. They contain the solution for first and second levels. They might use common methods, and there might be common input parsing. The second part of the puzzle is available only upon completion of the first part. The solution of the first part might be refactored after that; check the file history to see the original solution of the first part.
 
+Traditionally, each puzzle has two inputs. One simple for testing and second more complex for the actual puzzle. The test input is embedded at the end of the file, the production input is expected in a file called `src/DayXX.txt` (not published, see below). The input is the same for both parts of the puzzle.
 
-[^aoc]:
-    [Advent of Code][aoc] – An annual event of Christmas-oriented programming challenges started December 2015.
-    Every year since then, beginning on the first day of December, a programming puzzle is published every day for twenty-five days.
-    You can solve the puzzle and provide an answer using the language of your choice.
+The `main` function stitches these components together. It reads the inputs, **optionally parses/sanitises/transforms them**, calls both parts on both inputs, assesses that the test input produces the correct result, and prints the results for the production input.
 
-[aoc]: https://adventofcode.com
-[docs]: https://kotlinlang.org/docs/home.html
-[github]: https://github.com/robinpokorny
-[issues]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template/issues
-[kotlin]: https://kotlinlang.org
-[slack]: https://surveys.jetbrains.com/s3/kotlin-slack-sign-up
-[template]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template
+> **Note**
+> The inputs (`.txt` files) for the puzzles are not published in this repo as [requested by the AoC author](https://twitter.com/ericwastl/status/1465805354214830081).
+
+There are utilities in the `scr/Utils.kt` folder. If you see an unknown function, please check this file. It should contain tools useful for several solutions.
+
+### About AoC
+[Advent of Code](http://adventofcode.com) (AoC) is an online programming event. Each year, starting on `-12-01`, an advent calendar of small programming puzzles are unlocked once a day at midnight (EST/UTC-5). Developers of all skill sets are encouraged to solve them in any programming language they choose!
+
+### Past years
+* 2022 in Kotlin:  [GitHub](https://github.com/robinpokorny/advent-of-code-2022)
+* 2020 in TypeScript:  [GitHub](https://github.com/robinpokorny/advent-of-code-2020)
+
+---
+
+_This repo is build using the [Advent of Code Kotlin Template](https://github.com/kotlin-hands-on/advent-of-code-kotlin-template) delivered by JetBrains._
