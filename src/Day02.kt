@@ -1,34 +1,52 @@
-typealias Game = Pair<Int, List<Map<String, Int>>>
+import kotlin.math.max
+
+data class Cubes(val green: Int = 0, val red: Int = 0, val blue: Int = 0)
+
+typealias Game = Pair<Int, List<Cubes>>
 
 private fun parse(input: List<String>): List<Game> = input
-    .map {
-        val (idRaw, gameRaw) = it.split(": ")
+    .map { line ->
+        val (idRaw, gameRaw) = line.split(": ")
         val (_, id) = idRaw.split(" ")
         val counts = gameRaw.split("; ")
-            .map {
-                it
+            .map { hand ->
+                hand
                     .split(", ")
                     .map { it.split(" ") }
                     .map { (count, color) -> color to count.toInt() }
                     .toMap()
             }
+            .map {
+                Cubes(
+                    green = it.getOrDefault("green", 0),
+                    red = it.getOrDefault("red", 0),
+                    blue = it.getOrDefault("blue", 0),
+                )
+            }
 
-        (id.toInt() to counts)
+        id.toInt() to counts
     }
 
 private fun part1(input: List<Game>): Int = input
     .filter { (_, counts) ->
         counts.all {
-            it.getOrDefault("red", 0) <= 12 &&
-                it.getOrDefault("green", 0) <= 13 &&
-                it.getOrDefault("blue", 0) <= 14
+            it.red <= 12 && it.green <= 13 && it.blue <= 14
         }
     }
     .sumOf { (id, _) -> id }
 
-private fun part2(input: List<Game>): Int {
-    return 0
-}
+private fun part2(input: List<Game>): Int = input
+    .map { it.second }
+    .map { counts ->
+        counts.fold(Cubes()) { acc, cubes ->
+            Cubes(
+                green = max(acc.green, cubes.green),
+                red = max(acc.red, cubes.red),
+                blue = max(acc.blue, cubes.blue)
+            )
+        }
+    }
+    .sumOf { (green, red, blue) -> green * red * blue }
 
 fun main() {
     val testInput = parse(rawTestInput)
@@ -41,7 +59,7 @@ fun main() {
     println("Part1: ${part1(input)}")
 
     // PART 2
-    assertEquals(part2(testInput), 0)
+    assertEquals(part2(testInput), 2286)
     println("Part2: ${part2(input)}")
 }
 
