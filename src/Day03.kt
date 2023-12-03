@@ -1,7 +1,5 @@
-private data class Schematic(
-    val symbols: Set<Point>,
-    val nextToSymbol: Map<Point, List<Int>>
-)
+typealias Schematic = Map<Point, List<Int>>
+
 private fun parse(input: List<String>) = input
 
 
@@ -15,7 +13,7 @@ private fun toSchematic(input: List<String>): Schematic {
         }
         .toSet()
 
-    val nextToSymbol = input.flatMapIndexed { i, line ->
+    return input.flatMapIndexed { i, line ->
         Regex("\\d+")
             .findAll(line)
             .flatMap { match ->
@@ -29,28 +27,17 @@ private fun toSchematic(input: List<String>): Schematic {
                     .map { it to match.value.toInt() }
             }
     }.groupBy({ it.first }, { it.second })
-
-    return Schematic(symbols, nextToSymbol)
 }
 
 private fun part1(input: List<String>): Int = toSchematic(input)
-    .nextToSymbol.flatMap { it.value }.sum()
+    .flatMap { it.value }.sum()
 
 
-private fun part2(input: List<String>): Int {
-    val schematic = toSchematic(input)
+private fun part2(input: List<String>): Int = toSchematic(input)
+    .filter { (point, values) -> input[point.x][point.y] == '*' && values.size == 2 }
+    .values
+    .sumOf { (a, b) -> a * b }
 
-    val stars = schematic
-        .symbols
-        .filter { (x, y) -> input[x][y] == '*' }
-
-    return schematic
-        .nextToSymbol
-        .filterKeys { it in stars }
-        .filterValues { it.size == 2 }
-        .values
-        .sumOf { (a, b) -> a * b }
-}
 
 fun main() {
     val testInput = parse(rawTestInput)
