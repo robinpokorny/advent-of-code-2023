@@ -1,8 +1,12 @@
 import kotlin.math.pow
 
+private data class Card(val id: Int, val matching: Int)
+
 private fun parse(input: List<String>) = input
     .map {
-        val (_, lists) = it.split(": ")
+        val (rawId, lists) = it.split(": ")
+
+        val id = rawId.split(Regex("\\s+"))[1].toInt()
 
         val (winning, received) = lists
             .split(" | ")
@@ -10,18 +14,26 @@ private fun parse(input: List<String>) = input
                 list
                     .trim()
                     .split(Regex("\\s+"))
-                    .map { it.toInt() }
+                    .mapNotNull(String::toIntOrNull)
+                    .toSet()
             }
 
-        winning to received
+        Card(id, winning.intersect(received).size)
     }
 
-private fun part1(input: List<Pair<List<Int>, List<Int>>>): Int = input
-    .sumOf { (winning, received) ->
-        2.0.pow(winning.intersect(received).size -1).toInt()
+private fun part1(cards: List<Card>): Int = cards
+    .sumOf { (_, matching) ->
+        2.0.pow(matching -1).toInt()
     }
-private fun part2(input:  List<Pair<List<Int>, List<Int>>>): Int {
-    return 0
+private fun part2(cards: List<Card>): Int {
+    val copies = cards.associate { it.id to 1 }.toMutableMap()
+
+    cards.forEach { (id, matching) ->
+        for (i in id+1 .. id + matching)
+            copies[i] = copies[i]!! + copies[id]!!
+    }
+
+    return copies.values.sum()
 }
 
 fun main() {
@@ -33,8 +45,8 @@ fun main() {
     println("Part1: ${part1(input)}")
 
     // PART 2
-    assertEquals(part2(testInput), 0)
-    // println("Part2: ${part2(input)}")
+    assertEquals(part2(testInput), 30)
+    println("Part2: ${part2(input)}")
 }
 
 private val rawTestInput = """
