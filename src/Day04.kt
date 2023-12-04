@@ -23,13 +23,14 @@ private fun parse(input: List<String>) = input
 
 private fun part1(cards: List<Card>): Int = cards
     .sumOf { (_, matching) ->
-        2.0.pow(matching -1).toInt()
+        2.0.pow(matching - 1).toInt()
     }
+
 private fun part2(cards: List<Card>): Int {
     val copies = cards.associate { it.id to 1 }.toMutableMap()
 
     cards.forEach { (id, matching) ->
-        for (i in id+1 .. id + matching)
+        for (i in id + 1..id + matching)
             copies[i] = copies[i]!! + copies[id]!!
     }
 
