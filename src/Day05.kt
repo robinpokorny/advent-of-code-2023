@@ -1,3 +1,6 @@
+import kotlin.math.max
+import kotlin.math.min
+
 data class Almanac(val seeds: List<Long>, val maps: List<List<Pair<LongRange, LongRange>>>)
 
 private fun parse(input: String): Almanac {
@@ -17,12 +20,13 @@ private fun parse(input: String): Almanac {
                 .map { line ->
                     line.split(" ")
                         .map { it.toLong() }
-                        .let { (dest, source, length) -> (dest..dest+length) to (source..source+length) }
+                        .let { (dest, source, length) -> (dest..dest + length) to (source..source + length) }
                 }
         }
 
     return Almanac(seeds, maps)
 }
+
 private fun part1(almanac: Almanac): Long = almanac.seeds
     .map { seed ->
         almanac.maps
@@ -36,7 +40,41 @@ private fun part1(almanac: Almanac): Long = almanac.seeds
     .min()
 
 private fun part2(almanac: Almanac): Long {
-    return 0
+    val seedRanges = almanac.seeds.chunked(2).map { (start, length) -> start..<(start + length) }
+
+    return seedRanges
+        .flatMap { seedRange ->
+            almanac.maps
+                // apply mapping on matching subranges
+                .fold(listOf(seedRange)) { acc, map ->
+                    acc
+                        .flatMap { range ->
+                            val mapped = map.mapNotNull { (dest, source) ->
+                                val subrange = max(source.first, range.first)..min(source.last, range.last)
+
+                                if (subrange.isEmpty()) null
+                                else {
+                                    val shift = dest.first - source.first
+                                    subrange to (subrange.first + shift)..(subrange.last + shift)
+                                }
+                            }
+
+                            val fixedPoints = mapped
+                                .map { it.first }
+                                .sortedBy { it.first }
+                                .flatMap { listOf(it.first, it.last) }
+                                .let { listOf(range.first) + it + listOf(range.last) }
+                                .chunked(2)
+                                .mapNotNull { (start, end) ->
+                                    if (start >= end) null
+                                    else if (end == range.last) start.. end else start..<end
+                                }
+
+                            mapped.map { it.second } + fixedPoints
+                        }
+                }
+        }
+        .minOf { it.first }
 }
 
 fun main() {
@@ -48,7 +86,7 @@ fun main() {
     println("Part1: ${part1(input)}")
 
     // PART 2
-    assertEquals(part2(testInput), 0)
+    assertEquals(part2(testInput), 46)
     println("Part2: ${part2(input)}")
 }
 
