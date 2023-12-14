@@ -10,7 +10,7 @@ private fun part1(input: List<String>): Int = input
     }
     .reduce { acc, i -> acc * i }
 
-private fun part2(input:  List<Pair<Int, Int>>): Int {
+private fun part2(input:  List<String>): Int {
     return 0
 }
 
